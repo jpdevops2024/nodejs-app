@@ -1,19 +1,26 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node'  // Use Node.js Docker image for the entire pipeline
+            args '-u root'  // Run as root user to avoid permission issues
+        }
+    }
 
     stages {
         stage('Install Dependencies') {
-            agent {
-                docker {
-                    image 'node'  // Use Node.js Docker image
-                    args '-u root'  // Run as root user to avoid permission issues
-                }
-            }
             steps {
                 // Override the default .npm cache directory to a writable location
                 sh 'npm install --cache .npm --prefer-offline'
             }
         }
+
+        stage('Package Application') {
+            steps {
+                // Package the application
+                sh 'npm pack'
+            }
+        }
     }
 }
+
 
