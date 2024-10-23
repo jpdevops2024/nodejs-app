@@ -16,7 +16,7 @@ pipeline {
 
         stage('Package Application') {
             steps {
-                // Package the application
+                // Package the application yes
                 sh 'npm pack'
             }
         }
