@@ -7,9 +7,9 @@ pipeline {
     }
 
     stages {
-        stage('Install Dependencies') {
+        stage('Install all Dependencies') {
             steps {
-                // Override the default .npm cache directory to a writable location
+                // Override the default .npm cache directory to a writable location m
                 sh 'npm install --cache .npm --prefer-offline'
             }
         }
