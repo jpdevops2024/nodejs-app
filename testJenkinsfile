@@ -16,6 +16,13 @@ pipeline {
             }
         }
 
+        stage('Clean Workspace') {
+            steps {
+                // Remove all files created in the workspace
+                sh 'rm -rf *'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 // Override the default .npm cache directory to a writable location
