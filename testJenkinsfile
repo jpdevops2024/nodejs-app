@@ -34,7 +34,7 @@ pipeline {
                 sh '''
                     curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \
                     -T *.tgz \
-                    "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/${BUILD_ID}.tgz"
+                    "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/my-app-${BUILD_ID}.tgz"
                 '''
             }
         }
