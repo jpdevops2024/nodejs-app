@@ -30,15 +30,14 @@ pipeline {
 
         stage('Upload App to Artifact') {
             steps {
-                // Upload the application to Artifactory securely
-                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
-                    sh '''
-                        curl -u admin:${ARTIFACTORY_TOKEN} \
-                        -T *.tgz \
-                        "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/${BUILD_ID}.tgz"
-                    '''
-                }
+                // Upload the application to Artifactory
+                sh '''
+                    curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \
+                    -T *.tgz \
+                    "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/${BUILD_ID}.tgz"
+                '''
             }
         }
     }
 }
+
