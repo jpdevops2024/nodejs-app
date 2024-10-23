@@ -1,10 +1,15 @@
-pipeline{
-    agent any
+pipeline {
+    agent any  // Use any available Jenkins agent
 
-    stages{
-        stage('Dependencies install'){
-            steps{
-                sh 'npm install'
+    stages {
+        stage('Install Dependencies') {
+            agent { 
+                docker { 
+                    image 'node'  // Use the official Node.js Docker image
+                } 
+            }
+            steps {
+                sh 'npm install'  // Run npm install to install project dependencies
             }
         }
     }
