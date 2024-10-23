@@ -20,6 +20,13 @@ pipeline {
                 sh 'npm pack'
             }
         }
+
+        stage('Upload App to Artifact') {
+            steps {
+                // Upload the application to Artifactory
+                sh 'curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd -T *.tgz "http://ec2-54-205-94-62.compute-1.amazonaws.com:8081/artifactory/utc-nodejs/my-app-${BUILD_ID}.tgz"'
+            }
+        }
     }
 }
 
