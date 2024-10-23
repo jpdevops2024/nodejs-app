@@ -7,6 +7,15 @@ pipeline {
     }
 
     stages {
+        stage('Checkout SCM') {
+            steps {
+                script {
+                    // Ensure you have set up credentials in Jenkins for Git access
+                    checkout scm
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 // Override the default .npm cache directory to a writable location
@@ -24,14 +33,26 @@ pipeline {
         stage('Confirm Artifact Existence') {
             steps {
                 // Check if the artifact exists before upload
-                sh 'ls -lh *.tgz'
+                sh 'ls -lh my-app-1.2.0.tgz'
             }
         }
 
         stage('Upload App to Artifact') {
             steps {
-                // Upload the application to Artifactory
-                sh 'curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd -T *.tgz "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/newapp-nodejs/my-app-${BUILD_ID}.tgz"'
+                script {
+                    // Upload the application to Artifactory
+                    def uploadCommand = '''
+                    curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \
+                    -T my-app-1.2.0.tgz \
+                    "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/newapp-nodejs/my-app-${BUILD_ID}.tgz"
+                    '''
+
+                    // Check if upload was successful
+                    def result = sh(script: uploadCommand, returnStatus: true)
+                    if (result != 0) {
+                        error("Upload failed with status: ${result}")
+                    }
+                }
             }
         }
     }
