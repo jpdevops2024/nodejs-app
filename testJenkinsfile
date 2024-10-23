@@ -7,12 +7,10 @@ pipeline {
     }
 
     stages {
-        stage('Checkout SCM') {
+        stage('Clean Workspace') {
             steps {
-                script {
-                    // Ensure you have set up credentials in Jenkins for Git access
-                    checkout scm
-                }
+                // Remove any existing .tgz files to avoid conflicts
+                sh 'rm -f *.tgz'
             }
         }
 
@@ -30,28 +28,15 @@ pipeline {
             }
         }
 
-        stage('Confirm Artifact Existence') {
-            steps {
-                // Check if the artifact exists before upload
-                sh 'ls -lh my-app-1.2.0.tgz'
-            }
-        }
-
         stage('Upload App to Artifact') {
             steps {
-                script {
-                    // Upload the application to Artifactory
-                    def uploadCommand = '''
-                    curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \
-                    -T my-app-1.2.0.tgz \
-                    "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/newapp-nodejs/my-app-${BUILD_ID}.tgz"
+                // Upload the application to Artifactory securely
+                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
+                    sh '''
+                        curl -u admin:${ARTIFACTORY_TOKEN} \
+                        -T *.tgz \
+                        "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/${BUILD_ID}.tgz"
                     '''
-
-                    // Check if upload was successful
-                    def result = sh(script: uploadCommand, returnStatus: true)
-                    if (result != 0) {
-                        error("Upload failed with status: ${result}")
-                    }
                 }
             }
         }
