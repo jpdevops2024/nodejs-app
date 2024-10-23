@@ -7,9 +7,9 @@ pipeline {
     }
 
     stages {
-        stage('Install all Dependencies') {
+        stage('Install Dependencies') {
             steps {
-                // Override the default .npm cache directory to a writable location m
+                // Override the default .npm cache directory to a writable location
                 sh 'npm install --cache .npm --prefer-offline'
             }
         }
@@ -21,12 +21,18 @@ pipeline {
             }
         }
 
+        stage('Confirm Artifact Existence') {
+            steps {
+                // Check if the artifact exists before upload
+                sh 'ls -lh *.tgz'
+            }
+        }
+
         stage('Upload App to Artifact') {
             steps {
                 // Upload the application to Artifactory
-                sh 'curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd -T *.tgz "http://ec2-54-205-94-62.compute-1.amazonaws.com:8081/artifactory/newapp-nodejs/my-app-${BUILD_ID}.tgz"'
+                sh 'curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd -T my-app-1.2.0.tgz "http://ec2-54-205-94-62.compute-1.amazonaws.com:8081/artifactory/newapp-nodejs/my-app-${BUILD_ID}.tgz"'
             }
         }
     }
 }
-
