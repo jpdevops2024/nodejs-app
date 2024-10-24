@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('Upload App to Artifact') {
+        stage('Upload App to Artifactory') {
             steps {
                 // Upload the application to Artifactory
                 sh '''
