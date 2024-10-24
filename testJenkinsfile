@@ -1,4 +1,3 @@
-
 pipeline {
     agent {
         docker {
@@ -17,26 +16,26 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Override the default .npm cache directory to a writable location
+                // Install Node.js dependencies, overriding the default .npm cache directory
                 sh 'npm install --cache .npm --prefer-offline'
             }
         }
 
         stage('Package Application') {
             steps {
-                // Package the application
+                // Package the application into a .tgz file
                 sh 'npm pack'
             }
         }
 
         stage('Upload App to Artifact') {
             steps {
-                // Upload the application to Artifactory
-                sh '''
-                    curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \
-                    -T *.tgz \
+                // Upload the application package to Artifactory
+                sh """
+                    curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \\
+                    -T *.tgz \\
                     "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/my-app-${BUILD_ID}.tgz"
-                '''
+                """
             }
         }
     }
