@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace to remove files') {
+        stage('Clean Workspace') {
             steps {
                 // Remove any existing .tgz files to avoid conflicts
                 sh 'rm -f *.tgz'
