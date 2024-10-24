@@ -7,6 +7,13 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                // Remove any existing .tgz files to avoid conflicts
+                sh 'rm -f *.tgz'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 // Override the default .npm cache directory to a writable location
@@ -24,9 +31,12 @@ pipeline {
         stage('Upload App to Artifact') {
             steps {
                 // Upload the application to Artifactory
-                sh 'curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd -T *.tgz "http://ec2-54.237.170.208.compute-1.amazonaws.com:8081/artifactory/utc-nodejs/myapp-nodejs/${BUILD_ID}.tgz"'
+                sh '''
+                    curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \
+                    -T *.tgz \
+                    "http://ec2-54-237-170-208.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/my-app-${BUILD_ID}.tgz"
+                '''
             }
         }
     }
 }
-
