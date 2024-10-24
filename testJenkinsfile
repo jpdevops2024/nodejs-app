@@ -1,3 +1,4 @@
+
 pipeline {
     agent {
         docker {
@@ -9,8 +10,8 @@ pipeline {
     stages {
         stage('Clean Workspace') {
             steps {
-                // Remove any existing .tgz files to avoid conflicts
-                sh 'rm -f *.tgz'
+                // Remove all files and directories in the workspace
+                sh 'rm -rf *'
             }
         }
 
@@ -40,4 +41,3 @@ pipeline {
         }
     }
 }
-
