@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage('Clean Workspace') {
             steps {
-                // Remove any existing .tgz files to avoid conflicts
-                sh 'rm -f *.tgz'
+                // Remove all files and directories in the workspace
+                sh 'rm -rf *'
             }
         }
 
@@ -28,13 +28,13 @@ pipeline {
             }
         }
 
-        stage('Upload App to Artifactory') {
+        stage('Upload App to Artifact') {
             steps {
-                // Upload the application to Artifactory
+                // Upload the application to Artifactory using the IP address
                 sh '''
                     curl -u admin:AP8gcgmmset5jeYChTJYDN6XmDd \
-                    -T *.tgz \
-                    "http://ec2-54-144-115.compute-1.amazonaws.com:8081/artifactory/myapp-nodejs/my-app-${BUILD_ID}.tgz"
+                    -T my-app-1.2.0.tgz \
+                    "http://54.144.115.138:8081/artifactory/myapp-nodejs/my-app-${BUILD_ID}.tgz"
                 '''
             }
         }
